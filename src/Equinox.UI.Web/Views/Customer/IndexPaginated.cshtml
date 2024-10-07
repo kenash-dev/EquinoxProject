@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Equinox.Application.ViewModels.CustomerViewModel>
+﻿@model Equinox.UI.Web.Models.PaginatedList<Equinox.Application.ViewModels.CustomerViewModel>
 
 @{
     ViewData["Title"] = "Customer Management";
@@ -33,13 +33,13 @@
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Name)
+                    @Html.DisplayNameFor(model => model.GetEnumerator().Current.Name)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Email)
+                    @Html.DisplayNameFor(model => model.GetEnumerator().Current.Email)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.BirthDate)
+                    @Html.DisplayNameFor(model => model.GetEnumerator().Current.BirthDate)
                 </th>
                 <th></th>
             </tr>
@@ -117,7 +117,7 @@
     </div>
 </div>
 
-@*@{
+@{
     var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
     var nextDisabled = !Model.HasNextPage ? "disabled" : "";
 }
@@ -131,7 +131,7 @@
    asp-route-pageNumber="@(Model.PageIndex + 1)"
    class="btn btn-default @nextDisabled">
     Next
-</a>*@
+</a>
 
 @section scripts
 {

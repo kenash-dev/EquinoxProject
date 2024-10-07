@@ -43,6 +43,11 @@ namespace Equinox.Infra.Data.Repository
                 .ToListAsync();
         }
 
+        public int GetCustomerCount()
+        {
+            return DbSet.Count();
+        }
+
         public async Task<Customer> GetByEmail(string email)
         {
             return await DbSet.AsNoTracking().FirstOrDefaultAsync(c => c.Email == email);

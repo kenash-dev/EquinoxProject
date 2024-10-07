@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Equinox.Application.EventSourcedNormalizers;
@@ -38,7 +39,7 @@ namespace Equinox.Application.Services
 
         public async Task<IEnumerable<CustomerViewModel>> GetPaginatedList(int pageNumber, int pageSize)
         {
-            return _mapper.Map<IEnumerable<CustomerViewModel>>(await _customerRepository.GetPaginatedList(pageNumber, pageSize));
+            return _mapper.Map<IEnumerable<CustomerViewModel>>(await _customerRepository.GetPaginatedList(pageNumber, pageSize)).ToList();
         }
 
         public async Task<CustomerViewModel> GetById(Guid id)
@@ -67,6 +68,11 @@ namespace Equinox.Application.Services
         public async Task<IList<CustomerHistoryData>> GetAllHistory(Guid id)
         {
             return CustomerHistory.ToJavaScriptCustomerHistory(await _eventStoreRepository.All(id));
+        }
+
+        public async Task<int> GetCustomerCount()
+        {
+           return await Task.Run( () => _customerRepository.GetCustomerCount());
         }
 
         public void Dispose()

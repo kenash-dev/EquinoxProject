@@ -1,6 +1,7 @@
 using Equinox.Application.Interfaces;
 using Equinox.Application.ViewModels;
 using Equinox.Infra.CrossCutting.Identity.Authorization;
+using Equinox.UI.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,8 +30,9 @@ namespace Equinox.UI.Web.Controllers
         {
             ViewData["pageNumber"] = pageNumber;
             ViewData["pageSize"] = pageSize;
-
-            return View(await _customerAppService.GetPaginatedList(pageNumber, pageSize));
+            var customerList = await _customerAppService.GetPaginatedList(pageNumber, pageSize);
+            var totalCustomerCount = await _customerAppService.GetCustomerCount();
+            return View(await PaginatedList<CustomerViewModel>.CreateAsync( customerList, totalCustomerCount, pageNumber, pageSize));
         }
 
         [AllowAnonymous]
