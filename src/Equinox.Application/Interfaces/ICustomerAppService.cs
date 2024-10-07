@@ -10,6 +10,7 @@ namespace Equinox.Application.Interfaces
     public interface ICustomerAppService : IDisposable
     {
         Task<IEnumerable<CustomerViewModel>> GetAll();
+        Task<IEnumerable<CustomerViewModel>> GetPaginatedList(int pageNumber, int pageSize);
         Task<CustomerViewModel> GetById(Guid id);
         
         Task<ValidationResult> Register(CustomerViewModel customerViewModel);

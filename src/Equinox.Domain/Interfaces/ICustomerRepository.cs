@@ -11,7 +11,7 @@ namespace Equinox.Domain.Interfaces
         Task<Customer> GetById(Guid id);
         Task<Customer> GetByEmail(string email);
         Task<IEnumerable<Customer>> GetAll();
-
+        Task<IEnumerable<Customer>> GetPaginatedList(int pageNumber, int pageSize);
         void Add(Customer customer);
         void Update(Customer customer);
         void Remove(Customer customer);

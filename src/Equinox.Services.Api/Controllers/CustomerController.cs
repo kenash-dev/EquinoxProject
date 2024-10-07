@@ -25,6 +25,13 @@ namespace Equinox.Services.Api.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet("customerList")]
+        public async Task<IEnumerable<CustomerViewModel>> GetPaginated([FromQuery]int pageNumber = 1, [FromQuery]int pageSize = 10)
+        {
+            return await _customerAppService.GetPaginatedList(pageNumber, pageSize);
+        }
+
+        [AllowAnonymous]
         [HttpGet("customer/{id:guid}")]
         public async Task<CustomerViewModel> Get(Guid id)
         {

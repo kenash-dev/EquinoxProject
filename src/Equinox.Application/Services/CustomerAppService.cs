@@ -36,6 +36,11 @@ namespace Equinox.Application.Services
             return _mapper.Map<IEnumerable<CustomerViewModel>>(await _customerRepository.GetAll());
         }
 
+        public async Task<IEnumerable<CustomerViewModel>> GetPaginatedList(int pageNumber, int pageSize)
+        {
+            return _mapper.Map<IEnumerable<CustomerViewModel>>(await _customerRepository.GetPaginatedList(pageNumber, pageSize));
+        }
+
         public async Task<CustomerViewModel> GetById(Guid id)
         {
             return _mapper.Map<CustomerViewModel>(await _customerRepository.GetById(id));

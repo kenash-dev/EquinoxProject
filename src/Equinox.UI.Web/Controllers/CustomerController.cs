@@ -15,11 +15,22 @@ namespace Equinox.UI.Web.Controllers
         {
             _customerAppService = customerAppService;
         }
+
         [AllowAnonymous]
         [HttpGet("customer-management/list-all")]
         public async Task<IActionResult> Index()
         {
             return View(await _customerAppService.GetAll());
+        }
+
+        [AllowAnonymous]
+        [HttpGet("customer-management/list-paginated")]
+        public async Task<IActionResult> IndexPaginated(int pageNumber =1, int pageSize = 10)
+        {
+            ViewData["pageNumber"] = pageNumber;
+            ViewData["pageSize"] = pageSize;
+
+            return View(await _customerAppService.GetPaginatedList(pageNumber, pageSize));
         }
 
         [AllowAnonymous]
