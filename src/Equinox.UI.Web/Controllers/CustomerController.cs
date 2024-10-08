@@ -18,15 +18,8 @@ namespace Equinox.UI.Web.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("customer-management/list-all")]
-        public async Task<IActionResult> Index()
-        {
-            return View(await _customerAppService.GetAll());
-        }
-
-        [AllowAnonymous]
         [HttpGet("customer-management/list-paginated")]
-        public async Task<IActionResult> IndexPaginated(int pageNumber =1, int pageSize = 10)
+        public async Task<IActionResult> Index(int pageNumber =1, int pageSize = 10)
         {
             var customerList = await _customerAppService.GetPaginatedList(pageNumber, pageSize);
             var totalCustomerCount = await _customerAppService.GetCustomerCount();
