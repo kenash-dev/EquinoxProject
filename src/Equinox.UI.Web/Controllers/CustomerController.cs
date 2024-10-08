@@ -23,8 +23,12 @@ namespace Equinox.UI.Web.Controllers
         {
             var customerList = await _customerAppService.GetPaginatedList(pageNumber, pageSize);
             var totalCustomerCount = await _customerAppService.GetCustomerCount();
+            
+            var pager = new Pager(totalCustomerCount, pageNumber, pageSize);
 
-            return View(await PaginatedList<CustomerViewModel>.CreateAsync( customerList, totalCustomerCount, pageNumber, pageSize));
+            this.ViewBag.Pager = pager;
+
+            return View(customerList);
         }
 
         [AllowAnonymous]

@@ -1,7 +1,18 @@
-﻿@model Equinox.UI.Web.Models.PaginatedList<Equinox.Application.ViewModels.CustomerViewModel>
+﻿@using System.ComponentModel.Design
+@using Equinox.UI.Web.Models
+@model IEnumerable<Equinox.Application.ViewModels.CustomerViewModel>
 
 @{
     ViewData["Title"] = "Customer Management";
+    Pager pager = new Pager();
+
+    int pageNumber = 0;
+
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+        pageNumber = pager.CurrentPage;
+    }
 }
 
 <style>
@@ -58,15 +69,15 @@
                         @Html.DisplayFor(modelItem => item.BirthDate)
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id" asp-route-pageNumber="@(Model.PageIndex)" title="Edit" class="btn btn-warning">
+                        <a asp-action="Edit" asp-route-id="@item.Id" asp-route-pageNumber="@pager.CurrentPage" title="Edit" class="btn btn-warning">
                             <span class="fas fa-edit"></span>
                         </a>
 
-                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-pageNumber="@(Model.PageIndex)" title="Details" class="btn btn-primary">
+                        <a asp-action="Details" asp-route-id="@item.Id" asp-route-pageNumber="@pager.CurrentPage" title="Details" class="btn btn-primary">
                             <span class="fas fa-search"></span>
                         </a>
 
-                        <a asp-action="Delete" asp-route-id="@item.Id" asp-route-pageNumber="@(Model.PageIndex)" title="Delete" class="btn btn-danger">
+                        <a asp-action="Delete" asp-route-id="@item.Id" asp-route-pageNumber="@pager.CurrentPage" title="Delete" class="btn btn-danger">
                             <span class="fas fa-trash-alt"></span>
                         </a>
 
@@ -100,21 +111,7 @@
     </div>
 </div>
 
-@{
-    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
-}
-
-<a asp-action="Index"
-   asp-route-pageNumber="@(Model.PageIndex - 1)"
-   class="btn btn-default @prevDisabled">
-    Previous
-</a>
-<a asp-action="Index"
-   asp-route-pageNumber="@(Model.PageIndex + 1)"
-   class="btn btn-default @nextDisabled">
-    Next
-</a>
+<partial name="_pager" model="@pager"></partial>
 
 @section scripts
 {
