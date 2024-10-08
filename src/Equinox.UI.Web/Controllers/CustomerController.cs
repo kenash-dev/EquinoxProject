@@ -130,10 +130,9 @@ namespace Equinox.UI.Web.Controllers
 
         [AllowAnonymous]
         [HttpGet("customer-management/customer-history/{id:guid}")]
-        public async Task<JsonResult> History(Guid id, int pageNumber)
+        public async Task<JsonResult> History(Guid id)
         {
             var customerHistoryData = await _customerAppService.GetAllHistory(id);
-            TempData["pageIndex"] = pageNumber;
 
             return Json(customerHistoryData);
         }

@@ -12,7 +12,7 @@ The goal of this project is implement the most common used technologies and shar
 [![Issues open](https://img.shields.io/github/issues/eduardopires/equinoxproject.svg)](https://huboard.com/EduardoPires/EquinoxProject/)
 
 ## Give a Star! :star:
-If you liked the project or if Equinox helped you, please give a star ;)
+If you liked the project or if Equinox helped you, please give a star ;
 
 ## Want to learn everything?  :mortar_board:
 Check my online courses at [desenvolvedor.io](https://desenvolvedor.io)
@@ -99,6 +99,9 @@ To know more about how to setup your enviroment visit the [Microsoft .NET Downlo
 - Adding WebAPI service exposing the application features
 - Adding Swagger UI for better viewing and testing
 - Adding MediatR for Memory Bus Messaging
+
+## Pagination
+Added pagination utilising EfCore skip and take.
 
 ## Disclaimer:
 - **NOT** intended to be a definitive solution
