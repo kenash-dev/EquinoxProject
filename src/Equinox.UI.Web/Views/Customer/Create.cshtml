@@ -40,7 +40,7 @@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-success" />
-                <a asp-action="Index" class="btn btn-info">Back to List</a>
+                <a asp-action="IndexPaginated" asp-route-pageNumber=@TempData["pageIndex"] class="btn btn-info">Back to List</a>
             </div>
         </div>
     </div>
