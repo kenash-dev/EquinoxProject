@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Equinox.Domain.Interfaces;
 using Equinox.Domain.Models;
@@ -30,6 +31,21 @@ namespace Equinox.Infra.Data.Repository
         public async Task<IEnumerable<Customer>> GetAll()
         {
             return await DbSet.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Customer>> GetPaginatedList(int pageNumber, int pageSize)
+        {
+            return await DbSet
+                .AsNoTracking()
+                .OrderBy(c => c.Name)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
+        public int GetCustomerCount()
+        {
+            return DbSet.Count();
         }
 
         public async Task<Customer> GetByEmail(string email)

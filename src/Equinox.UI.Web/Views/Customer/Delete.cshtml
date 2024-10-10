@@ -36,7 +36,7 @@
 
         <div class="form-actions no-color">
             <input type="submit" value="Delete" class="btn btn-danger" />
-            <a asp-action="Index" class="btn btn-info">Back to List</a>
+            <a asp-action="Index" asp-route-pageNumber=@TempData["pageIndex"] class="btn btn-info">Back to List</a>
         </div>
     </div>
 </form>

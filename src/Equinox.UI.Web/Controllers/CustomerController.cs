@@ -1,6 +1,7 @@
 using Equinox.Application.Interfaces;
 using Equinox.Application.ViewModels;
 using Equinox.Infra.CrossCutting.Identity.Authorization;
+using Equinox.UI.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,19 +16,28 @@ namespace Equinox.UI.Web.Controllers
         {
             _customerAppService = customerAppService;
         }
+
         [AllowAnonymous]
-        [HttpGet("customer-management/list-all")]
-        public async Task<IActionResult> Index()
+        [HttpGet("customer-management/list-paginated")]
+        public async Task<IActionResult> Index(int pageNumber =1, int pageSize = 10)
         {
-            return View(await _customerAppService.GetAll());
+            var customerList = await _customerAppService.GetPaginatedList(pageNumber, pageSize);
+            var totalCustomerCount = await _customerAppService.GetCustomerCount();
+            
+            var pager = new Pager(totalCustomerCount, pageNumber, pageSize);
+
+            this.ViewBag.Pager = pager;
+
+            return View(customerList);
         }
 
         [AllowAnonymous]
         [HttpGet("customer-management/customer-details/{id:guid}")]
-        public async Task<IActionResult> Details(Guid? id)
+        public async Task<IActionResult> Details(Guid? id, int pageNumber)
         {
             if (id == null) return NotFound();
 
+            TempData["pageIndex"] = pageNumber;
             var customerViewModel = await _customerAppService.GetById(id.Value);
 
             if (customerViewModel == null) return NotFound();
@@ -44,7 +54,7 @@ namespace Equinox.UI.Web.Controllers
 
         [CustomAuthorize("Customers", "Write")]
         [HttpPost("customer-management/register-new")]
-        public async Task<IActionResult> Create(CustomerViewModel customerViewModel)
+        public async Task<IActionResult> Create(CustomerViewModel customerViewModel, int pageNumber)
         {
             if (!ModelState.IsValid) return View(customerViewModel);
             
@@ -52,13 +62,13 @@ namespace Equinox.UI.Web.Controllers
                 return View(customerViewModel);
 
             ViewBag.Sucesso = "Customer Registered!";
-
+            TempData["pageIndex"] = pageNumber;
             return View(customerViewModel);
         }
 
         [CustomAuthorize("Customers", "Write")]
         [HttpGet("customer-management/edit-customer/{id:guid}")]
-        public async Task<IActionResult> Edit(Guid? id)
+        public async Task<IActionResult> Edit(Guid? id, int pageNumber)
         {
             if (id == null) return NotFound();
 
@@ -66,12 +76,14 @@ namespace Equinox.UI.Web.Controllers
 
             if (customerViewModel == null) return NotFound();
 
+            TempData["pageIndex"] = pageNumber;
+
             return View(customerViewModel);
         }
 
         [CustomAuthorize("Customers", "Write")]
         [HttpPost("customer-management/edit-customer/{id:guid}")]
-        public async Task<IActionResult> Edit(CustomerViewModel customerViewModel)
+        public async Task<IActionResult> Edit(CustomerViewModel customerViewModel, int pageNumber)
         {
             if (!ModelState.IsValid) return View(customerViewModel);
             
@@ -79,13 +91,14 @@ namespace Equinox.UI.Web.Controllers
                 return View(customerViewModel);
 
             ViewBag.Sucesso = "Customer Updated!";
+            TempData["pageIndex"] = pageNumber;
 
             return View(customerViewModel);
         }
 
         [CustomAuthorize("Customers", "Remove")]
         [HttpGet("customer-management/remove-customer/{id:guid}")]
-        public async Task<IActionResult> Delete(Guid? id)
+        public async Task<IActionResult> Delete(Guid? id, int pageNumber)
         {
             if (id == null) return NotFound();
 
@@ -93,17 +106,22 @@ namespace Equinox.UI.Web.Controllers
 
             if (customerViewModel == null) return NotFound();
 
+            TempData["pageIndex"] = pageNumber;
+
             return View(customerViewModel);
         }
 
         [CustomAuthorize("Customers", "Remove")]
         [HttpPost("customer-management/remove-customer/{id:guid}"), ActionName("Delete")]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id, int pageNumber)
         {
             if (ResponseHasErrors(await _customerAppService.Remove(id)))
                 return View(await _customerAppService.GetById(id));
 
             ViewBag.Sucesso = "Customer Removed!";
+
+            TempData["pageIndex"] = pageNumber;
+
             return RedirectToAction("Index");
         }
 
@@ -112,6 +130,7 @@ namespace Equinox.UI.Web.Controllers
         public async Task<JsonResult> History(Guid id)
         {
             var customerHistoryData = await _customerAppService.GetAllHistory(id);
+
             return Json(customerHistoryData);
         }
     }
